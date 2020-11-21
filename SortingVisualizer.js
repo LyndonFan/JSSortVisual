@@ -30,11 +30,21 @@ function valToColor(prop, s){
   return [255*(tup[0]+v-c),255*(tup[1]+v-c),255*(tup[2]+v-c)];
 }
 
+function swap(ls,i,j){
+  if (0<=i && i<ls.length && 0<=j && j<ls.length){
+    var temp = ls[i];
+    ls[i] = ls[j];
+    ls[j] = temp;
+  } else {
+    throw "Values "+i+" "+j+" not valid as indices for list(length="+ls.length+")";
+  }
+}
+
 async function updateList(){
-  print(events);
   if (events.length > 0){
     var tup = events.shift();
-    list.swap(tup[0],tup[1]);
+    print(tup);
+    swap(list.vals,tup[0],tup[1]);
     prevEvents.push(tup);
     setTimeout(updateList,1000);
   }
@@ -42,7 +52,8 @@ async function updateList(){
 
 function keyPressed() {
   if (!isSorting && keyCode === 32) {
-    bubbleSort(list);
+    var sorter = new Sorter(insertionSort);
+    sorter.sort();
   }
 }
 

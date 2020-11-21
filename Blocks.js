@@ -4,11 +4,11 @@ class Blocks{
     this.vals = vals;
     const listMin = min(this.vals);
     const listMax = max(this.vals);
-    for (var i=0; i<this.vals.length; i++){
-      let v = this.vals[i];
-      print(300*(v-listMin)/(listMax-listMin));
-      print(valToColor((v-listMin)/(listMax-listMin),1));
-    }
+    // for (var i=0; i<this.vals.length; i++){
+    //   let v = this.vals[i];
+    //   print(300*(v-listMin)/(listMax-listMin));
+    //   print(valToColor((v-listMin)/(listMax-listMin),1));
+    // }
   }
   
   len(){
@@ -21,16 +21,6 @@ class Blocks{
   
   startY(){
     return height - 50;
-  }
-  
-  swap(i,j){
-    if (0<=i && i<this.vals.length && 0<=j && j<this.vals.length){
-      var temp = this.vals[i];
-      this.vals[i] = this.vals[j];
-      this.vals[j] = temp;
-    } else {
-      throw "Values "+i+" "+j+" not valid as indices for list(length="+this.vals.length+")";
-    }
   }
   
   show(){
