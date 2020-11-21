@@ -85,6 +85,55 @@ function mergeSort(ls, returnRes = false){
     return returnRes?[swaps,ls]:swaps;
 }
 
+function naiveQuickSort(ls){
+    return quickSort(ls,true);
+}
+
+function quickSort(ls,naivePivot = false){
+    if (ls.length<=1){return [];}
+    if (!naivePivot){
+        // TODO: swap pivot to start
+    }
+    print(ls);
+    var swaps = [];
+    var i = 1;
+    var j = 1;
+    var k = ls.length;
+    while (j<k){
+        swaps.push([[],new Active([0,j])]);
+        if (ls[j]==ls[0]){
+            j++;
+        }
+        else if (ls[j]<ls[0]){
+            if (i<j){
+                swap(ls,i,j);
+                swaps.push([[i,j],new Active([0,i,j])]);
+            }
+            i++; j++;
+        } else {
+            swap(ls,j,k-1);
+            swaps.push([[j,k-1],new Active([0,j,k-1])]);
+            k--;
+        }
+    }
+    for (var x = 0; x<i-1; x++){
+        swap(ls,x,x+1);
+        swaps.push([[x,x+1],new Active([x,x+1])]);
+    }
+    i--;
+    swaps.push([[],new Active([0,ls.length],true)]);
+    print(swaps);
+    swaps = swaps.concat(quickSort(ls.slice(0,i),naivePivot));
+    var backSwaps = quickSort(ls.slice(j,ls.length),naivePivot);
+    for (var x = 0; x < backSwaps.length; x++){
+        for (var y = 0; y < backSwaps[x][0].length; y++){backSwaps[x][0][y] += j;}
+        backSwaps[x][1].addConst(j);
+    }
+    swaps = swaps.concat(backSwaps);
+    print(swaps);
+    return swaps;
+}
+
 function shuffleList(ls){
     var swaps = [];
     for (var i = 0; i<ls.length-1; i++){
