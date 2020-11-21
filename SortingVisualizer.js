@@ -19,7 +19,7 @@ function setup() {
 function valToColor(prop, s){
   var h = 300*prop;
   var v = 1;
-  var c = v*s;
+  var c = 1;
   var x = c*(1 - abs(((h/60)%2) - 1));
   var tup;
   if (h<60){tup = [c,x,0];}
@@ -27,7 +27,7 @@ function valToColor(prop, s){
   else if (h<180){tup = [0,c,x];}
   else if (h<240){tup = [0,x,c];}
   else {tup = [x,0,c];}
-  return [255*(tup[0]+v-c),255*(tup[1]+v-c),255*(tup[2]+v-c)];
+  return [255*(tup[0]+v-c),255*(tup[1]+v-c),255*(tup[2]+v-c),255*s];
 }
 
 function swap(ls,i,j){
@@ -43,16 +43,20 @@ function swap(ls,i,j){
 async function updateList(){
   if (events.length > 0){
     var tup = events.shift();
+    var indices = tup[0];
     print(tup);
-    swap(list.vals,tup[0],tup[1]);
+    list.updateActive(tup[1]);
+    if (indices.length==2){swap(list.vals,indices[0],indices[1]);}
     prevEvents.push(tup);
     setTimeout(updateList,1000);
+  } else {
+    list.resetActive();
   }
 }
 
 function keyPressed() {
   if (!isSorting && keyCode === 32) {
-    var sorter = new Sorter(selectionSort);
+    var sorter = new Sorter(mergeSort);
     sorter.sort();
   }
 }
@@ -61,6 +65,6 @@ function draw() {
   createCanvas(windowWidth,windowHeight);
   background(255);
   stroke(0);
-  strokeWeight(5);
+  strokeWeight(2);
   list.show();
 }
