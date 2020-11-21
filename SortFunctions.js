@@ -32,30 +32,39 @@ function insertionSort(ls){
     return swaps;
 }
 
-// TODO: sometimes converts to string...
-
-// function mergeSort(ls, returnRes = false){
-//     print("List to sort: "+ls);
-//     if (ls.length<=1){return returnRes?[[],ls]:[];}
-//     var m = Math.floor(ls.length/2);
-//     print("Middle index: "+m);
-//     var n = ls.length;
-//     var front = mergeSort(ls.slice(0,m),true);
-//     var back = mergeSort(ls.slice(m,n),true);
-//     for (var i = 0; i<back[0].length; i++){back[0][i] += m;}
-//     print(front);
-//     print(back);
-//     var swaps = front[0] + back[0];
-//     print("Done swaps: "+swaps);
-//     ls = front[1].concat(back[1]);
-//     var i = 0;
-//     var j = m;
-//     while (i<m && j<n){
-//         if (ls[i]<=ls[j]){i++;}
-//         else {swap(ls,i,j);swaps.push([i,j]);j++;}
-//         print(swaps);
-//     }
-//     print("Result:       "+ls);
-//     return returnRes?[swaps,ls]:swaps;
-// }
+function mergeSort(ls, returnRes = false){
+    print("List to sort: "+ls);
+    if (ls.length<=1){return returnRes?[[],ls]:[];}
+    var m = Math.floor(ls.length/2);
+    print("Middle index: "+m);
+    var n = ls.length;
+    var front = mergeSort(ls.slice(0,m),true);
+    var back = mergeSort(ls.slice(m,n),true);
+    for (var i = 0; i<back[0].length; i++){
+        back[0][i][0] += m; back[0][i][1] += m;
+    }
+    print(front);
+    print(back);
+    var swaps = [].concat(front[0],back[0]);
+    print("Done swaps: ");
+    print(swaps);
+    ls = front[1].concat(back[1]);
+    var i = 0;
+    var j = m;
+    while (i<n && j<n){
+        if (ls[i]<=ls[j]){i++;}
+        else {
+            for (var k = j; k>i; k--){
+                swap(ls,k,k-1); swaps.push([k-1,k]);
+            }
+            i++;
+            j++;
+        }
+        print(swaps);
+        print(i,j,ls);
+    }
+    
+    print("Result:       "+ls);
+    return returnRes?[swaps,ls]:swaps;
+}
   

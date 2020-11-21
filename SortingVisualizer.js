@@ -6,7 +6,7 @@ var isSorting = false;
 function setup() {
   createCanvas(windowWidth,windowHeight);
   textAlign(CENTER);
-  var listLength = random(4,10);
+  var listLength = 8//random(4,10);
   var tempList = [];
   for (var i = 0; i < listLength; i++){
     var v = round(random(1,100));
@@ -52,7 +52,7 @@ async function updateList(){
 
 function keyPressed() {
   if (!isSorting && keyCode === 32) {
-    var sorter = new Sorter(insertionSort);
+    var sorter = new Sorter(mergeSort);
     sorter.sort();
   }
 }
