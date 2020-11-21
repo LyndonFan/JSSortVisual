@@ -93,3 +93,19 @@ function shuffleList(ls){
     }
     return swaps;
 }
+
+function bogoSort(ls){
+    var swaps = [];
+    var isSorted = false;
+    while(!isSorted){
+        isSorted = true;
+        for (var i = 0; isSorted && i<ls.length-1; i++){
+            isSorted = ls[i]<=ls[i+1];
+            swaps.push([[], new Active([i,i+1])]);
+        }
+        if (!isSorted){
+            swaps = swaps.concat(shuffleList(ls));
+        }
+    }
+    return swaps;
+}
