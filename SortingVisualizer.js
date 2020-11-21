@@ -45,7 +45,7 @@ async function updateList(){
     var tup = events.shift();
     var indices = tup[0];
     print(tup);
-    list.updateActive(tup[1]);
+    if (tup.length>1){list.updateActive(tup[1]);}
     if (indices.length==2){swap(list.vals,indices[0],indices[1]);}
     prevEvents.push(tup);
     setTimeout(updateList,1000);
@@ -57,6 +57,10 @@ async function updateList(){
 function keyPressed() {
   if (!isSorting && keyCode === 32) {
     var sorter = new Sorter(mergeSort);
+    sorter.sort();
+  }
+  if (!isSorting && keyCode === 83) {
+    var sorter = new Sorter(shuffleList);
     sorter.sort();
   }
 }

@@ -84,4 +84,12 @@ function mergeSort(ls, returnRes = false){
     print("Result:       "+ls);
     return returnRes?[swaps,ls]:swaps;
 }
-  
+
+function shuffleList(ls){
+    var swaps = [];
+    for (var i = 0; i<ls.length-1; i++){
+        let j = int(random(i,ls.length));
+        swap(ls,i,j); swaps.push([[i,j],new Active([i,j])]);
+    }
+    return swaps;
+}
