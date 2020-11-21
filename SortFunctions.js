@@ -32,6 +32,20 @@ function insertionSort(ls){
     return swaps;
 }
 
+function selectionSort(ls){
+    var swaps = [];
+    for (var i = 0; i<ls.length-1; i++){
+        var holder = i;
+        for (var j = i+1; j<ls.length; j++){
+            if (ls[holder]>ls[j]){holder = j;}
+        }
+        if (holder > i){
+            swap(ls,i,holder); swaps.push([i,holder]);
+        }
+    }
+    return swaps;
+}
+
 function mergeSort(ls, returnRes = false){
     print("List to sort: "+ls);
     if (ls.length<=1){return returnRes?[[],ls]:[];}

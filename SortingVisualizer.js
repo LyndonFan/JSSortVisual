@@ -52,7 +52,7 @@ async function updateList(){
 
 function keyPressed() {
   if (!isSorting && keyCode === 32) {
-    var sorter = new Sorter(mergeSort);
+    var sorter = new Sorter(selectionSort);
     sorter.sort();
   }
 }
