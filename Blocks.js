@@ -52,7 +52,7 @@ class Blocks{
       fill((255,255,255,255*(1-s)));
       var ts = widthUnit / (str(v).length);
       textSize(ts);
-      if (ts >= thisHeight){text(v,startX+widthUnit/2,this.startY() - thisHeight - 5);}
+      if (ts >= thisHeight + 5){text(v,startX+widthUnit/2,this.startY() - thisHeight - 5);}
       else {text(v,startX+widthUnit/2,this.startY() - (height-100)/listMax - 5);}
     }
   }

@@ -91,11 +91,18 @@ function naiveQuickSort(ls){
 
 function quickSort(ls,naivePivot = false){
     if (ls.length<=1){return [];}
-    if (!naivePivot){
-        // TODO: swap pivot to start
-    }
-    print(ls);
     var swaps = [];
+    print(ls);
+    if (!naivePivot){
+        var m = int(ls.length/2);
+        swaps.push([[],new Active([0,m,ls.length-1])]);
+        var pIndex;
+        if ((ls[m]-ls[0])*(ls[ls.length-1]-ls[0]) <= 0){pIndex = 0;}
+        else if ((ls[0]-ls[m])*(ls[ls.length-1]-ls[m]) <= 0){pIndex = m;}
+        else {pIndex = ls.length-1;}
+        swap(ls,0,pIndex);
+        swaps.push([[0,pIndex],new Active([0,pIndex])]);
+    }
     var i = 1;
     var j = 1;
     var k = ls.length;
@@ -131,6 +138,38 @@ function quickSort(ls,naivePivot = false){
     }
     swaps = swaps.concat(backSwaps);
     print(swaps);
+    return swaps;
+}
+
+function heapify(ls,end,i){
+    var largest = i;
+    var swaps = [];
+    if (2*i+1<end && ls[2*i+1]>ls[largest]){largest = 2*i+1;}
+    if (2*i+2<end && ls[2*i+2]>ls[largest]){largest = 2*i+2;}
+    if (largest != i){
+        swap(ls,i,largest);
+        swaps.push([[i,largest],new Active([i,largest])]);
+        swaps = swaps.concat(heapify(ls,end,largest));
+    }
+    return swaps;
+}
+
+function heapSort(ls){
+    if (ls.length<=1){return [];}
+    var swaps = [];
+    const n = ls.length;
+    print(ls)
+    for (var i = int(n/2)-1; i>-1; i--){
+        swaps = swaps.concat(heapify(ls,n,i));
+        print(ls);
+    }
+    for (var i = n-1; i>0; i--){
+        swap(ls,0,i);
+        swaps.push([[0,i],new Active([0,i])]);
+        print(ls)
+        swaps = swaps.concat(heapify(ls,i,0));
+        print(ls)
+    }
     return swaps;
 }
 

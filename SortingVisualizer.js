@@ -6,7 +6,7 @@ var isSorting = false;
 function setup() {
   createCanvas(windowWidth,windowHeight);
   textAlign(CENTER);
-  var listLength = random(4,10);
+  var listLength = random(6,12);
   var tempList = [];
   for (var i = 0; i < listLength; i++){
     var v = round(random(1,20));
