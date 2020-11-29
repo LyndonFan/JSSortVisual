@@ -8,11 +8,6 @@ class Blocks{
     for (var i = 0; i<vals.length; i++){
       this.active.push(true);
     }
-    // for (var i=0; i<this.vals.length; i++){
-    //   let v = this.vals[i];
-    //   print(300*(v-listMin)/(listMax-listMin));
-    //   print(valToColor((v-listMin)/(listMax-listMin),1));
-    // }
   }
   
   len(){
@@ -21,8 +16,8 @@ class Blocks{
   
   maxHeight(){return height - 100;}
   startY(){return height - 50;}
-  maxWidth(){return width*3/4;}
-  startX(){return width/8;}
+  maxWidth(){return width*5/8;}
+  startX(){return width*3/16;}
 
   updateActive(a){
     this.active = a.genActiveList(this.len());

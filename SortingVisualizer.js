@@ -6,6 +6,7 @@ var autoPlay = true;
 const updateTimes = [2000,1000,500,250,100,50];
 let timeSlider;
 var sortInfo;
+var buttons = [];
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
@@ -19,20 +20,26 @@ function setup() {
   }
   list = new Blocks(tempList);
   timeSlider = createSlider(0,updateTimes.length-1,updateTimes.indexOf(500),1);
-  timeSlider.position(100, height-25);
-  timeSlider.style('width',width-200+'px');
 
   sortInfo = [
     {name: "Bubble Sort", hotkey: "B", fn: bubbleSort},
     {name: "Selection Sort", hotkey: "S", fn: selectionSort},
     {name: "Insertion Sort", hotkey: "I", fn: insertionSort},
     {name: "Merge Sort", hotkey: "M", fn: mergeSort},
-    {name: "Heapsort", hotkey: "S", fn: selectionSort},
+    {name: "Heapsort", hotkey: "H", fn: selectionSort},
     {name: "Quicksort", hotkey: "Q", fn: naiveQuickSort},
     {name: "Quicksort: Smart Pivot", hotkey: "P", fn: quickSort},
     {name: "Bogosort", hotkey: "G", fn: bogoSort},
-    {name: "Shuffle", hotkey: "H", fn: shuffleList}
+    {name: "Shuffle", hotkey: "R", fn: shuffleList}
   ];
+
+  const n = sortInfo.length;
+  for (var i = 0; i < n; i++){
+    let s = sortInfo[i];
+    var buttonText = "("+s.hotkey+") "+s.name;
+    print(sortInfo[i]);
+    buttons.push(new DynamicButton(buttonText,0,i/n,0.125,1/n,() => {sortWith(s.fn);}));
+  }
 }
 
 function valToColor(prop, s){
@@ -59,15 +66,15 @@ function swap(ls,i,j){
   }
 }
 
-async function updateList(){
-  if (events.length > 0){
-    var tup = events.shift();
+async function updateList(isForward=true){
+  if ((isForward && events.length > 0) || (!isForward && prevEvents.length > 0)){
+    var tup = isForward?events.shift():prevEvents.pop();
     var indices = tup[0];
     print(tup);
     if (tup.length>1){list.updateActive(tup[1]);}
     if (indices.length==2){swap(list.vals,indices[0],indices[1]);}
-    prevEvents.push(tup);
-    if (autoPlay) {setTimeout(updateList,updateTimes[timeSlider.value()]);}
+    if (isForward){prevEvents.push(tup);} else {events.unshift(tup);}
+    if (autoPlay) {setTimeout(() => {updateList(isForward);},updateTimes[timeSlider.value()]);}
   } else {
     list.resetActive();
   }
@@ -80,18 +87,6 @@ function keyPressed() {
         sortWith(s.fn);
       }
     }
-    // switch (keyCode){
-    //   case 81: {sortWith(naiveQuickSort); break;} //"Q" -- naive Quicksort
-    //   case 82: {sortWith(shuffleList); break;}    //"R" -- Restart
-    //   case 83: {sortWith(selectionSort); break;}  //"S" -- Selectionsort
-    //   case 71: {sortWith(bogoSort); break;}       //"G" -- boGosort
-    //   case 66: {sortWith(bubbleSort); break;}     //"B" -- Bubblesort
-    //   case 72: {sortWith(heapSort); break;}       //"H" -- Heapsort
-    //   case 77: {sortWith(mergeSort); break;}      //"M" -- Mergesort
-    //   case 73: {sortWith(insertionSort); break;}  //"I" -- Insertionsort
-    //   case 80: {sortWith(quickSort); break;}      //"P" -- quicksort with smart Pivot
-    //   default: {break;}
-    // }
   }
   if (keyCode == 32){                             //" " -- autoPlay on/off
     autoPlay = !autoPlay; print(autoPlay); updateList();
@@ -99,14 +94,18 @@ function keyPressed() {
   else if (keyCode == 39){                        //"→" -- autoPlay off, next step
     autoPlay = false; updateList();
   }
+  else if (keyCode == 37){                        //"←" -- autoPlay off, prev step
+    autoPlay = false; updateList(false);
+  }
 }
 
 function draw() {
   createCanvas(windowWidth,windowHeight);
   background(255);
+  buttons.forEach(e => {e.update();});
   stroke(0);
   strokeWeight(2);
   list.show();
-  timeSlider.position(100, height-30);
-  timeSlider.style('width',width-200+'px');
+  timeSlider.position(list.startX(), (height+list.startY()-10)/2);
+  timeSlider.style('width',list.maxWidth()+'px');
 }
