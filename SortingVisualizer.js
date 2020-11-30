@@ -7,6 +7,7 @@ const updateTimes = [2000,1000,500,250,100,50];
 let timeSlider;
 var sortInfo;
 var buttons = [];
+var title = "Select a sort to start.";
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
@@ -19,6 +20,9 @@ function setup() {
     print(tempList[i]);
   }
   list = new Blocks(tempList);
+  fill(0);
+  textSize(32);
+
   timeSlider = createSlider(0,updateTimes.length-1,updateTimes.indexOf(500),1);
 
   sortInfo = [
@@ -26,7 +30,7 @@ function setup() {
     {name: "Selection Sort", hotkey: "S", fn: selectionSort},
     {name: "Insertion Sort", hotkey: "I", fn: insertionSort},
     {name: "Merge Sort", hotkey: "M", fn: mergeSort},
-    {name: "Heapsort", hotkey: "H", fn: selectionSort},
+    {name: "Heapsort", hotkey: "H", fn: heapSort},
     {name: "Quicksort", hotkey: "Q", fn: naiveQuickSort},
     {name: "Quicksort: Smart Pivot", hotkey: "P", fn: quickSort},
     {name: "Bogosort", hotkey: "G", fn: bogoSort},
@@ -37,8 +41,9 @@ function setup() {
   for (var i = 0; i < n; i++){
     let s = sortInfo[i];
     var buttonText = "("+s.hotkey+") "+s.name;
-    print(sortInfo[i]);
-    buttons.push(new DynamicButton(buttonText,0,i/n,0.125,1/n,() => {sortWith(s.fn);}));
+    let button = createButton(buttonText);
+    button.mouseClicked(() => {sortWith(s.fn);title = s.name;})
+    buttons.push(new RelativeElement(button,1/32,(2*i+1)/(2*n+2),0.125,1/(n+1)));
   }
 }
 
@@ -84,7 +89,7 @@ function keyPressed() {
   if (!isSorting && events.length==0){
     for (const s of sortInfo){
       if (keyCode == s.hotkey.charCodeAt(0)){
-        sortWith(s.fn);
+        sortWith(s.fn); title = s.name;
       }
     }
   }
@@ -106,6 +111,9 @@ function draw() {
   stroke(0);
   strokeWeight(2);
   list.show();
+  fill(0);
+  textSize(Math.min(50,width*5/4/title.length));
+  text(title,width/2,40);
   timeSlider.position(list.startX(), (height+list.startY()-10)/2);
   timeSlider.style('width',list.maxWidth()+'px');
 }
