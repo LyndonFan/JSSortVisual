@@ -5,25 +5,24 @@ var isSorting = false;
 var autoPlay = true;
 const updateTimes = [2000,1000,500,250,100,50];
 let timeSlider;
+let arrInput;
 var sortInfo;
-var buttons = [];
+var relElements = [];
 var title = "Select a sort to start.";
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
   textAlign(CENTER);
-  var listLength = random(20,40);
+  var listLength = random(4,16);
   var tempList = [];
   for (var i = 0; i < listLength; i++){
-    var v = round(random(1,50));
+    var v = round(random(1,2*listLength));
     tempList.push(v);
     print(tempList[i]);
   }
   list = new Blocks(tempList);
   fill(0);
   textSize(32);
-
-  timeSlider = createSlider(0,updateTimes.length-1,updateTimes.indexOf(500),1);
 
   sortInfo = [
     {name: "Bubble Sort", hotkey: "B", fn: bubbleSort},
@@ -43,7 +42,42 @@ function setup() {
     var buttonText = "("+s.hotkey+") "+s.name;
     let button = createButton(buttonText);
     button.mouseClicked(() => {sortWith(s.fn);title = s.name;})
-    buttons.push(new RelativeElement(button,1/32,(2*i+1)/(2*n+2),0.125,1/(n+1)));
+    relElements.push(new RelativeElement(button,1/32,(2*i+1)/(2*n+2),1/8,1/(n+1)));
+  }  
+
+  timeSlider = createSlider(0,updateTimes.length-1,updateTimes.indexOf(500),1);
+  timeSlider = new RelativeElement(timeSlider,3/16,61/64,5/8);
+  relElements.push(timeSlider);
+
+  arrInput = createInput(list.vals.join(","));
+  arrInput.style("background-color","#ffffff");
+  arrInput = new RelativeElement(arrInput,27/32,1/4,1/8,1/8);
+  relElements.push(arrInput);
+  updateButton = createButton("Update list!");
+  updateButton.mouseClicked(updateBlocks);
+  updateButton = new RelativeElement(updateButton,27/32,3/8,1/8,1/8);
+  relElements.push(updateButton);
+}
+
+function updateBlocks(){
+  let inp = arrInput.value().replace(" ","").split(",");
+  let isOkay = inp.length>=2;
+  var newVals = []
+  for (var i = 0; isOkay && i<inp.length; i++){
+    isOkay = !isNaN(parseInt(inp[i]))
+    if (isOkay){newVals.push(parseInt(inp[i]));}
+  }
+  if (isOkay){
+    list.vals = newVals;
+    list.resetActive();
+    isSorting = false;
+    prevEvents = [];
+    events = [];
+    title = "List updated!"
+  } else if (inp.length<2) {
+    alert("Please ensure the input has at least 2 elements:\n"+arrInput.value().replace(" ",""));
+  } else {
+    alert("Please ensure the input is an array of integers:\n"+arrInput.value().replace(" ",""));
   }
 }
 
@@ -107,13 +141,10 @@ function keyPressed() {
 function draw() {
   createCanvas(windowWidth,windowHeight);
   background(255);
-  buttons.forEach(e => {e.update();});
+  relElements.forEach(e => {e.update();});
   stroke(0);
   strokeWeight(2);
   list.show();
   fill(0);
-  textSize(Math.min(50,width*5/4/title.length));
-  text(title,width/2,40);
-  timeSlider.position(list.startX(), (height+list.startY()-10)/2);
-  timeSlider.style('width',list.maxWidth()+'px');
+  relativeText(title,1/2,3/32);
 }

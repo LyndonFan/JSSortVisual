@@ -14,4 +14,13 @@ class RelativeElement{
         this.elem.position(width*this.relX, height*this.relY);
         this.elem.size(width*this.widthProp,height*this.heightProp);
     }
+
+    value(){
+        return this.elem.value();
+    }
+}
+
+function relativeText(input, relX, relY){
+    textSize(Math.min(50,width*5/4/input.length));
+    text(input,width*relX,height*relY);
 }
