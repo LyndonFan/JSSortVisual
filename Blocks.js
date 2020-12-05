@@ -11,6 +11,15 @@ class Blocks{
   len(){
     return this.vals.length;
   }
+
+  setVals(newVals){
+    this.vals = newVals;
+    this.resetActive();
+    isSorting = false;
+    prevEvents = [];
+    events = [];
+    arrInput.value = this.vals.join(",");
+  }
   
   maxHeight(){return height*3/4;}
   startY(){return height*15/16;}
